@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100" dir="ltr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Login / Register | World Window Publishing</title>
+    <link href="../assets/css/style.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+    <style>
+      /* Auth page overrides */
+      .auth-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 3rem 0;
+        background: radial-gradient(circle at top, rgba(249, 243, 237, 0.95), rgba(250, 243, 231, 0.88));
+      }
+
+      .auth-card {
+        max-width: 960px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.96);
+        border-radius: 22px;
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.16);
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+      }
+
+      .auth-card .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0;
+      }
+
+      .auth-card .col-md-6 {
+        flex: 1 1 50%;
+        min-width: 320px;
+      }
+
+      .container {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 0 1.2rem;
+      }
+
+      .auth-left {
+        position: relative;
+        background: linear-gradient(135deg, rgba(134, 74, 209, 0.9), rgba(255, 195, 0, 0.85)),
+          url('../assets/images/wwplogo.png') center/contain no-repeat;
+        min-height: 520px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2.5rem;
+      }
+
+      .auth-left::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.25), transparent 55%);
+        pointer-events: none;
+      }
+
+      .brand-panel {
+        position: relative;
+        z-index: 1;
+        text-align: left;
+        color: rgba(255, 255, 255, 0.95);
+      }
+
+      .brand-panel .brand-name {
+        font-size: 2.1rem;
+        font-weight: 800;
+        margin-top: 0.5rem;
+        letter-spacing: 0.06em;
+      }
+
+      .brand-panel p {
+        margin-top: 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        opacity: 0.9;
+      }
+
+      .auth-right {
+        padding: 3.2rem 2.8rem;
+      }
+
+      .auth-right h2 {
+        margin-bottom: 0.35rem;
+        font-size: 2.1rem;
+        letter-spacing: 0.02em;
+      }
+
+      .auth-right p {
+        margin-bottom: 1.6rem;
+        color: rgba(20, 20, 20, 0.7);
+      }
+
+      .auth-right .form-group {
+        position: relative;
+        margin-bottom: 1.2rem;
+      }
+
+      .auth-right label {
+        font-weight: 600;
+        margin-bottom: 0.35rem;
+        display: block;
+        color: rgba(25, 25, 25, 0.85);
+      }
+
+      .auth-right input {
+        width: 100%;
+        padding: 0.92rem 1rem;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.95);
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        font-size: 1rem;
+        color: rgba(20, 20, 20, 0.9);
+      }
+
+      .auth-right input:focus {
+        border-color: rgba(134, 74, 209, 0.8);
+        box-shadow: 0 0 0 4px rgba(134, 74, 209, 0.12);
+      }
+
+      .form-feedback {
+        padding: 0.9rem 1rem;
+        margin-bottom: 1.25rem;
+        border-radius: 12px;
+        background: rgba(255, 76, 76, 0.08);
+        border: 1px solid rgba(255, 76, 76, 0.25);
+        color: rgba(186, 31, 31, 0.9);
+        font-size: 0.92rem;
+        display: none;
+      }
+
+      .password-toggle {
+        position: absolute;
+        top: 50%;
+        right: 1rem;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: rgba(0, 0, 0, 0.35);
+        font-size: 1.2rem;
+      }
+
+      #lgbtn {
+        width: 100%;
+        padding: 0.95rem;
+        font-size: 1.05rem;
+        border-radius: 12px;
+        border: none;
+        background: linear-gradient(135deg, #864ad1, #ffb800);
+        color: #fff;
+        box-shadow: 0 12px 25px rgba(134, 74, 209, 0.22);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      #lgbtn:hover:enabled {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 28px rgba(134, 74, 209, 0.3);
+      }
+
+      #lgbtn:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+        box-shadow: none;
+      }
+
+      .auth-links {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.2rem;
+        font-size: 0.92rem;
+        color: rgba(60, 60, 60, 0.8);
+      }
+
+      .auth-links a {
+        color: #864ad1;
+        font-weight: 600;
+      }
+
+      @media (max-width: 992px) {
+        .auth-card {
+          margin: 1rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .auth-card {
+          border-radius: 18px;
+        }
+        .auth-left {
+          display: none;
+        }
+        .auth-right {
+          padding: 2.6rem 1.8rem;
+        }
+      }
+
+      /* Utility helpers */
+      .vh-100 { min-height: 100vh; }
+    </style>
+  </head>
+  <body class="vh-100">
+    <main class="auth-page">
+      <div class="container">
+        <div class="auth-card row no-gutters">
+          <div class="col-md-6 auth-left d-flex align-items-center justify-content-center">
+            <div class="brand-panel">
+              <img src="../assets/images/wwplogo.png" alt="World Window Publishing" style="height: 3.5rem;" />
+              <div class="brand-name">Publish & Thrive</div>
+              <p>Join thousands of authors and readers. Build your store, sell books, and grow your audience.</p>
+            </div>
+          </div>
+          <div class="col-md-6 auth-right">
+            <h2>Create your account</h2>
+            <p class="text-muted">
+              Start publishing, selling and connecting with readers worldwide.
+            </p>
+            <form id="registerForm" onsubmit="validateAndRegister(event)">
+              <div id="formFeedback" class="form-feedback" aria-live="polite"></div>
+              <div class="form-group">
+                <label class="mb-1"><strong>Name</strong></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Your Name"
+                  id="name"
+                  autocomplete="name"
+                />
+              </div>
+              <div class="form-group">
+                <label class="mb-1"><strong>Email</strong></label>
+                <input
+                  type="email"
+                  class="form-control"
+                  placeholder="hello@example.com"
+                  id="email"
+                  autocomplete="email"
+                />
+              </div>
+              <div class="form-group">
+                <label class="mb-1"><strong>Mobile</strong></label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  placeholder="+971 50 123 4567"
+                  id="mobile"
+                  autocomplete="tel"
+                />
+              </div>
+              <div class="form-group">
+                <label class="mb-1"><strong>Password</strong></label>
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Create a password"
+                  id="password"
+                  autocomplete="new-password"
+                />
+                <span class="password-toggle" onclick="togglePassword()">
+                  <i class="uil uil-eye-slash" id="passwordIcon"></i>
+                </span>
+              </div>
+              <div class="text-center mt-4">
+                <button
+                  id="lgbtn"
+                  type="submit"
+                  class="btn btn-main btn-block"
+                  style="background-color: #864ad1; border: 0"
+                  disabled
+                >
+                  Register
+                </button>
+              </div>
+            </form>
+            <div class="auth-links">
+              <span>Already have an account?</span>
+              <a href="v2/">Sign in</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../assets/js/sweetalert.js"></script>
+    <script src="../assets/js/script.js"></script>
+    <script>
+      const validateEmail = (email) => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email);
+      const validateMobile = (value) => /^\+?[0-9]{6,15}$/.test(value.replace(/\s+/g, ""));
+
+      const checkForm = () => {
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const mobile = document.getElementById("mobile").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const isValid =
+          name &&
+          validateEmail(email) &&
+          validateMobile(mobile) &&
+          password.length >= 6;
+        document.getElementById("lgbtn").disabled = !isValid;
+        if (isValid) {
+          showFormFeedback("");
+        }
+      };
+
+      const togglePassword = () => {
+        const pw = document.getElementById("password");
+        const icon = document.getElementById("passwordIcon");
+        if (pw.type === "password") {
+          pw.type = "text";
+          icon.className = "uil uil-eye";
+        } else {
+          pw.type = "password";
+          icon.className = "uil uil-eye-slash";
+        }
+      };
+
+      const showFormFeedback = (msg) => {
+        const f = document.getElementById("formFeedback");
+        if (!f) return;
+        if (!msg) {
+          f.style.display = "none";
+          f.textContent = "";
+          return;
+        }
+        f.style.display = "block";
+        f.textContent = msg;
+      };
+
+      const validateAndRegister = (event) => {
+        if (event) event.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const mobile = document.getElementById("mobile").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const name = document.getElementById("name").value.trim();
+
+        if (!name) {
+          showFormFeedback("Please enter your name.");
+          return;
+        }
+        if (!validateEmail(email)) {
+          showFormFeedback("Please enter a valid email.");
+          return;
+        }
+        if (!validateMobile(mobile)) {
+          showFormFeedback("Please enter a valid mobile number.");
+          return;
+        }
+        if (password.length < 6) {
+          showFormFeedback("Password must be at least 6 characters.");
+          return;
+        }
+
+        showFormFeedback("");
+        register();
+      };
+
+      ["name", "email", "mobile", "password"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", checkForm);
+      });
+
+      // initialize button state on load
+      checkForm();
+    </script>
+  </body>
+</html>
