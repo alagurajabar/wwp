@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WWP — Submit Your Work</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --gold:#B8973A;--gold-light:#D4AF5A;
+      --dark:#1A1A2E;--white:#FAFAF8;--gray:#6B6B7B;
+      --light-gray:#F0EFE9;--border:#E2E0D8;
+      --success:#2E7D4F;--danger:#C0392B;
+      --blue:#2563EB;--blue-light:#3B82F6;
+    }
+    body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--dark);min-height:100vh}
+
+    /* PROGRESS */
+    .prog-wrap{background:#fff;border-bottom:1px solid var(--border);padding:16px 40px 0;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+    .step-label{font-size:12px;font-weight:500;color:var(--gray);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+    .step-label span{color:var(--gold);font-weight:600}
+    .pb-outer{height:6px;background:var(--light-gray);border-radius:999px;overflow:hidden}
+    .pb-inner{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:999px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+    .step-dots{display:flex;gap:8px;padding:10px 0 14px}
+    .dot{flex:1;height:3px;border-radius:99px;background:var(--border);transition:background .4s}
+    .dot.active{background:var(--gold)}.dot.done{background:var(--gold-light)}
+
+    /* LAYOUT */
+    .fc{max-width:920px;margin:0 auto;padding:48px 32px 80px}
+    .sp{display:none;animation:fi .4s ease}
+    .sp.active{display:block}
+    @keyframes fi{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+    /* HERO */
+    .hero-box{border:1.5px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:32px}
+    .hero-inner{padding:32px 32px 24px}
+    .hero-title{font-family:'Playfair Display',serif;font-size:26px;text-align:center;margin-bottom:14px;line-height:1.3}
+    .hero-body{font-size:14px;color:var(--gray);line-height:1.7;margin-bottom:22px}
+    .vid-wrap{border-radius:12px;overflow:hidden;aspect-ratio:16/9;max-height:320px;background:var(--dark)}
+    .vid-wrap iframe{width:100%;height:100%;border:none}
+
+    /* SECTION */
+    .stitle{font-family:'Playfair Display',serif;font-size:30px;margin-bottom:8px}
+    .ssub{font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:24px}
+    .divider{border:none;border-top:1px solid var(--border);margin:20px 0}
+
+    /* FORM */
+    .fr{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+    .fr.full{grid-template-columns:1fr}
+    .fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:20px}
+    .fg{display:flex;flex-direction:column;gap:6px}
+    label{font-size:13px;font-weight:600;color:var(--dark);letter-spacing:.02em}
+    label .req{color:#C0392B;margin-left:2px}
+    label small{color:var(--gray);font-weight:400}
+    input[type=text],input[type=email],input[type=tel],input[type=url],input[type=number],select,textarea{
+      border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;
+      font-family:'DM Sans',sans-serif;font-size:14px;color:var(--dark);
+      background:#fff;transition:border-color .2s,box-shadow .2s;outline:none;width:100%}
+    input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,151,58,.12)}
+    input.err,select.err,textarea.err{border-color:var(--danger)}
+    textarea{resize:vertical;min-height:120px}
+    .ferr{font-size:12px;color:var(--danger);margin-top:2px;display:none}
+    .ferr.show{display:block}
+
+    /* PHONE */
+    .ph-row{display:flex;gap:8px}
+    .ph-row select{width:110px;flex-shrink:0}
+
+    /* RADIO CARDS */
+    .rc-group{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+    .rc{flex:1;min-width:130px;border:2px solid var(--border);border-radius:12px;padding:13px 16px;cursor:pointer;transition:border-color .2s,background .2s;display:flex;align-items:center;gap:10px;user-select:none}
+    .rc:hover{border-color:var(--gold-light);background:#fffdf5}
+    .rc.sel{border-color:var(--gold);background:#fffdf0}
+    .rc input[type=radio]{accent-color:var(--gold);width:16px;height:16px;flex-shrink:0}
+    .rc-lbl{font-size:13.5px;font-weight:500}
+
+    /* SIMPLE RADIO */
+    .radio-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:8px}
+    .ro{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px}
+    .ro input[type=radio]{accent-color:var(--gold);width:16px;height:16px}
+
+    /* CHECKBOX */
+    .cbrow{display:flex;align-items:flex-start;gap:10px;margin-top:16px}
+    .cbrow input[type=checkbox]{accent-color:var(--gold);margin-top:2px;width:16px;height:16px;flex-shrink:0}
+    .cbrow label{font-size:13.5px;color:var(--gray);font-weight:400;line-height:1.5;cursor:pointer}
+    .cbrow label a{color:var(--gold)}
+
+    /* INSTRUCTIONS */
+    .instr{border:1.5px solid var(--border);border-radius:14px;padding:24px;margin-bottom:24px;background:#fdfcf8}
+    .instr h3{font-family:'Playfair Display',serif;font-size:20px;margin-bottom:6px}
+    .instr>p{font-size:13.5px;color:var(--gray);margin-bottom:14px}
+    .instr h4{font-size:14px;font-weight:600;margin-bottom:8px}
+    .instr ul{padding-left:18px;margin-bottom:14px}
+    .instr li{font-size:13.5px;color:var(--gray);margin-bottom:5px;line-height:1.55}
+    .instr li strong{color:var(--dark)}
+    .note-box{background:#fff8e6;border:1px solid #e8d48a;border-radius:8px;padding:12px 16px;margin-top:10px}
+    .note-box p{font-size:13px;color:#7A6020;margin:0 0 4px}
+    .note-box p:last-child{margin:0}
+
+    /* DROP ZONE */
+    .dz{border:2px dashed var(--border);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;background:#fafaf8;margin-top:6px}
+    .dz:hover,.dz.over{border-color:var(--gold);background:#fffbea}
+    .dz-icon{font-size:28px;margin-bottom:6px}
+    .dz-txt{font-size:14px;color:var(--gray)}
+    .dz-txt strong{color:var(--gold)}
+    .dz input[type=file]{display:none}
+    .fn{font-size:13px;color:var(--success);margin-top:6px;font-weight:500}
+
+    /* FILE BUTTON */
+    .file-btn-wrap{display:flex;align-items:center;gap:12px;margin-top:6px}
+    .file-btn{background:var(--dark);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:background .2s}
+    .file-btn:hover{background:var(--mid,#333)}
+    .file-btn-label{font-size:13px;color:var(--gray)}
+
+    /* RICH TEXT */
+    .rte{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+    .rte:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,151,58,.12)}
+    .rte-bar{background:var(--light-gray);border-bottom:1px solid var(--border);padding:6px 10px;display:flex;gap:4px;flex-wrap:wrap}
+    .tb{background:none;border:1px solid transparent;border-radius:6px;width:30px;height:28px;cursor:pointer;font-size:13px;font-weight:600;color:var(--dark);display:inline-flex;align-items:center;justify-content:center}
+    .tb:hover{background:#fff;border-color:var(--border)}
+    .rte-body{min-height:150px;padding:14px 16px;outline:none;font-size:14px;line-height:1.65}
+    .rte-body:empty:before{content:attr(data-ph);color:#aaa}
+    .wc{font-size:12px;color:var(--gray);text-align:right;margin-top:4px}
+
+    /* ADDRESS */
+    .addr-card{border:1.5px solid var(--border);border-radius:14px;padding:24px;margin-top:16px;background:#fdfcf8}
+    .addr-card h4{font-size:15px;font-weight:600;margin-bottom:16px}
+
+    /* UNDESIGNED INFO */
+    .info-card{border:1.5px solid #e8d48a;border-radius:14px;padding:24px;margin-top:20px;background:#fffdf5}
+    .info-card h3{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:6px}
+    .info-card p{font-size:13.5px;color:var(--gray);margin-bottom:18px;line-height:1.6}
+
+    /* PAYMENT */
+    .pay-tbl{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;border:1.5px solid var(--border);margin:16px 0}
+    .pay-tbl th{background:var(--light-gray);padding:12px 16px;font-size:13px;font-weight:600;text-align:left;border-bottom:1px solid var(--border)}
+    .pay-tbl td{padding:13px 16px;font-size:14px;border-bottom:1px solid var(--border)}
+    .pay-tbl tr:last-child td{border-bottom:none}
+    .pay-tbl .trow td{font-weight:700;background:#fffdf0}
+
+    /* CONDITIONAL */
+    .cond{display:none}.cond.show{display:block}
+    .hidden{display:none!important}
+
+    /* BUTTONS */
+    .nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px}
+    .btn{padding:13px 32px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+    .btn-out{background:transparent;border:2px solid var(--border);color:var(--dark)}
+    .btn-out:hover{border-color:var(--gold);color:var(--gold)}
+    .btn-pri{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#fff;box-shadow:0 4px 14px rgba(184,151,58,.35)}
+    .btn-pri:hover{transform:translateY(-1px)}
+    .btn-pay{width:100%;background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;padding:16px;border-radius:12px;font-size:16px;box-shadow:0 4px 16px rgba(37,99,235,.3);cursor:pointer;border:none;font-family:'DM Sans',sans-serif;font-weight:600;transition:all .2s}
+    .btn-pay:hover{transform:translateY(-2px)}
+    .btn-pay:disabled{opacity:.7;cursor:not-allowed;transform:none}
+
+    /* SUCCESS */
+    .suc{text-align:center;padding:60px 20px}
+    .suc-icon{font-size:64px;margin-bottom:16px}
+    .suc h2{font-family:'Playfair Display',serif;font-size:30px;margin-bottom:12px;color:var(--success)}
+    .suc p{font-size:15px;color:var(--gray);max-width:500px;margin:0 auto;line-height:1.7}
+
+    /* ALERT */
+    .alert{padding:14px 18px;border-radius:10px;font-size:14px;margin-bottom:16px;display:none}
+    .al-ok{background:#f0fdf4;border:1px solid #86efac;color:#166534}
+    .al-er{background:#fef2f2;border:1px solid #fca5a5;color:#991b1b}
+
+    /* ISBN inline msg */
+    .isbn-msg{font-size:14px;font-weight:600;color:var(--gold);margin-left:16px}
+
+    /* COLOR INPUT */
+    input[type=color]{width:100%;height:46px;padding:4px 8px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer}
+
+    @media(max-width:600px){
+      .fr,.fr3{grid-template-columns:1fr}
+      .rc-group{flex-direction:column}
+      .fc{padding:24px 16px 60px}
+      .prog-wrap{padding:12px 16px 0}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ YOUR HEADER GOES HERE ═══ -->
+
+<div class="prog-wrap">
+  <div class="step-label">Step <span id="sNum">1</span> of 5 — <span id="sName">Publishing Type</span></div>
+  <div class="pb-outer"><div class="pb-inner" id="pbIn" style="width:20%"></div></div>
+  <div class="step-dots">
+    <div class="dot active" id="d1"></div><div class="dot" id="d2"></div>
+    <div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div>
+  </div>
+</div>
+
+<div class="fc">
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- STEP 1 — Publishing Type                              -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="sp active" id="step1">
+  <div class="hero-box">
+    <div class="hero-inner">
+      <h1 class="hero-title">Empowering Authors, Students, and Publishers Across the Globe</h1>
+      <p class="hero-body">At World Window Publishing (WWP), we believe in the power of stories, knowledge, and creativity. Whether you are an aspiring author, a student looking to share your dissertation, or a publisher seeking a global platform, WWP offers tailored solutions.</p>
+      <div class="vid-wrap">
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen title="WWP Introduction"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="fg" style="margin-bottom:12px">
+    <label>Publishing Type <span class="req">*</span></label>
+    <div class="rc-group" id="ptCards">
+      <div class="rc sel" data-v="book_publishing" onclick="selPub(this)">
+        <input type="radio" name="publishing_type" value="book_publishing" checked>
+        <span class="rc-lbl">📚 Book Publishing</span>
+      </div>
+      <div class="rc" data-v="student_dissertations" onclick="selPub(this)">
+        <input type="radio" name="publishing_type" value="student_dissertations">
+        <span class="rc-lbl">🎓 Student Dissertations</span>
+      </div>
+      <div class="rc" data-v="other_publishers" onclick="selPub(this)">
+        <input type="radio" name="publishing_type" value="other_publishers">
+        <span class="rc-lbl">🏢 Other Publishers</span>
+      </div>
+    </div>
+    <p class="ferr" id="e_pubtype">Please select a publishing type.</p>
+  </div>
+
+  <div class="cbrow" style="margin-top:20px">
+    <input type="checkbox" id="agreeTerms">
+    <label for="agreeTerms">I have read and agree to the <a href="#" target="_blank">Terms and Conditions</a> and <a href="#" target="_blank">Privacy Policy</a>.</label>
+  </div>
+  <p class="ferr" id="e_terms">You must agree to the Terms and Conditions.</p>
+
+  <div class="nav"><div></div><button class="btn btn-pri" onclick="goNext(1)">Next →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- STEP 2 — Author Details                               -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="sp" id="step2">
+  <h2 class="stitle">Authors Detail</h2>
+  <p class="ssub">Provide your personal details to help us understand and connect with you better. This section captures essential information like your name, email address, and a brief biography.</p>
+  <hr class="divider"/>
+
+  <div class="fr">
+    <div class="fg">
+      <label for="aName">Author's Name <span class="req">*</span></label>
+      <input type="text" id="aName" placeholder="Author's Full Name"/>
+      <p class="ferr" id="e_name">Author's name is required.</p>
+    </div>
+    <div class="fg">
+      <label for="aEmail">Author's eMail <span class="req">*</span></label>
+      <input type="email" id="aEmail" placeholder="Author's Email Address"/>
+      <p class="ferr" id="e_email">A valid email is required.</p>
+    </div>
+  </div>
+
+  <div class="fr full">
+    <div class="fg">
+      <label for="aBio">Author's Bio <span class="req">*</span></label>
+      <textarea id="aBio" placeholder="Detailed Bio of the Author"></textarea>
+      <p class="ferr" id="e_bio">Author bio is required.</p>
+    </div>
+  </div>
+
+  <div class="fr">
+    <div class="fg">
+      <label for="aCountry">Author's Country <span class="req">*</span></label>
+      <select id="aCountry">
+        <option value="">Select Country</option>
+        <option>Afghanistan</option><option>Albania</option><option>Algeria</option>
+        <option>Argentina</option><option>Australia</option><option>Austria</option>
+        <option>Bangladesh</option><option>Belgium</option><option>Brazil</option>
+        <option>Canada</option><option>Chile</option><option>China</option>
+        <option>Colombia</option><option>Denmark</option><option>Egypt</option>
+        <option>Finland</option><option>France</option><option>Germany</option>
+        <option>Ghana</option><option>Greece</option><option>Hungary</option>
+        <option>India</option><option>Indonesia</option><option>Iran</option>
+        <option>Iraq</option><option>Ireland</option><option>Israel</option>
+        <option>Italy</option><option>Japan</option><option>Jordan</option>
+        <option>Kenya</option><option>Malaysia</option><option>Mexico</option>
+        <option>Morocco</option><option>Netherlands</option><option>New Zealand</option>
+        <option>Nigeria</option><option>Norway</option><option>Pakistan</option>
+        <option>Peru</option><option>Philippines</option><option>Poland</option>
+        <option>Portugal</option><option>Romania</option><option>Russia</option>
+        <option>Saudi Arabia</option><option>Singapore</option><option>South Africa</option>
+        <option>South Korea</option><option>Spain</option><option>Sri Lanka</option>
+        <option>Sweden</option><option>Switzerland</option><option>Tanzania</option>
+        <option>Thailand</option><option>Turkey</option><option>Uganda</option>
+        <option>Ukraine</option><option>United Arab Emirates</option>
+        <option>United Kingdom</option><option>United States</option>
+        <option>Venezuela</option><option>Vietnam</option><option>Zimbabwe</option>
+      </select>
+      <p class="ferr" id="e_country">Please select your country.</p>
+    </div>
+    <div class="fg">
+      <label>Author's Contact: Phone/Mobile <span class="req">*</span></label>
+      <div class="ph-row">
+        <select id="phCode">
+          <option value="+1">🇺🇸 +1</option><option value="+44">🇬🇧 +44</option>
+          <option value="+91" selected>🇮🇳 +91</option><option value="+92">🇵🇰 +92</option>
+          <option value="+971">🇦🇪 +971</option><option value="+966">🇸🇦 +966</option>
+          <option value="+61">🇦🇺 +61</option><option value="+49">🇩🇪 +49</option>
+          <option value="+33">🇫🇷 +33</option><option value="+86">🇨🇳 +86</option>
+          <option value="+81">🇯🇵 +81</option><option value="+55">🇧🇷 +55</option>
+          <option value="+27">🇿🇦 +27</option><option value="+234">🇳🇬 +234</option>
+        </select>
+        <input type="tel" id="aPhone" placeholder="Mobile Number"/>
+      </div>
+      <p class="ferr" id="e_phone">Phone number is required.</p>
+    </div>
+  </div>
+
+  <!-- OTHER PUBLISHERS ONLY -->
+  <div class="cond" id="pubFields">
+    <div class="fr">
+      <div class="fg">
+        <label for="pubName">Publisher's Name <span class="req">*</span></label>
+        <input type="text" id="pubName" placeholder="Name of the Publisher"/>
+        <p class="ferr" id="e_pubname">Publisher's name is required.</p>
+      </div>
+      <div class="fg">
+        <label for="pubWeb">Publisher's Website Link</label>
+        <input type="url" id="pubWeb" placeholder="Website URL of the Publisher"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="btn btn-out" onclick="goBack(2)">← Previous</button>
+    <button class="btn btn-pri" onclick="goNext(2)">Next →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- STEP 3 — Book / Dissertation Info + File Upload       -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="sp" id="step3">
+
+  <!-- ─── BOOK PUBLISHING & OTHER PUBLISHERS ─── -->
+  <div id="bookInfoBlock">
+    <h2 class="stitle">Book Information</h2>
+    <p class="ssub">Share key details about your book, including its title, design status, and format preferences.</p>
+    <hr class="divider"/>
+
+    <div class="fr full" style="margin-bottom:16px">
+      <div class="fg">
+        <label for="bookTitle">Book Title <span class="req">*</span></label>
+        <input type="text" id="bookTitle" placeholder="Book Title"/>
+        <p class="ferr" id="e_btitle">Book title is required.</p>
+      </div>
+    </div>
+
+    <div class="fg" style="margin-bottom:20px">
+      <label>Status of Book Design <span class="req">*</span></label>
+      <div class="radio-row">
+        <label class="ro">
+          <input type="radio" name="book_design_status" value="undesigned" onchange="onDesignStatus()" checked> Undesigned Book
+        </label>
+        <label class="ro">
+          <input type="radio" name="book_design_status" value="designed" onchange="onDesignStatus()"> Already Designed Book
+        </label>
+      </div>
+      <p class="ferr" id="e_design_status">Please select book design status.</p>
+    </div>
+  </div>
+
+
+
+
+
+  <!-- ─── STUDENT DISSERTATIONS ─── -->
+  <div id="disstInfoBlock" class="hidden">
+    <h2 class="stitle">Dissertation Information</h2>
+    <p class="ssub">Submit essential details about your dissertation, including its title, specialization, and a brief description.</p>
+    <hr class="divider"/>
+    <div class="fr full">
+      <div class="fg">
+        <label for="dTitle">Dissertation Title <span class="req">*</span></label>
+        <input type="text" id="dTitle" placeholder="Student Dissertation Title"/>
+        <p class="ferr" id="e_dtitle">Dissertation title is required.</p>
+      </div>
+    </div>
+    <div class="fr full">
+      <div class="fg">
+        <label for="dSpec">Dissertation Specialization <span class="req">*</span></label>
+        <input type="text" id="dSpec" placeholder="Dissertation Specialization"/>
+        <p class="ferr" id="e_dspec">Specialization is required.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── UPLOAD INSTRUCTIONS ─── -->
+  <div class="instr">
+    <h3 id="uploadTitle">Book File Upload Instructions</h3>
+    <p>You have two options to submit your file:</p>
+    <h4>1. Upload File Link <em>(Recommended)</em></h4>
+    <ul>
+      <li>Use a cloud storage service such as <strong>Google Drive, OneDrive, Dropbox, or Mega</strong>.</li>
+      <li>Ensure the link is publicly accessible or <strong>shared with the appropriate permissions</strong>.</li>
+      <li>Copy and paste the <strong>direct link</strong> in the provided field.</li>
+    </ul>
+    <h4>2. Upload Directly</h4>
+    <ul>
+      <li>You can upload the file <strong>directly</strong> to our platform.</li>
+      <li><strong>File Format:</strong> Only <strong>.pdf</strong> or <strong>.doc</strong> files are accepted.</li>
+      <li><strong>Maximum File Size: 50MB</strong>.</li>
+      <li>Ensure that your document is <strong>properly formatted and complete</strong> before uploading.</li>
+    </ul>
+    <div class="note-box">
+      <p><strong>Important Notes:</strong></p>
+      <p>• The recommended method is uploading via a <strong>cloud storage link</strong> to avoid file size limitations.</p>
+      <p>• If uploading directly, verify file does not exceed <strong>50MB</strong> and is in the correct format.</p>
+      <p>• If you experience any issues, please contact our support team.</p>
+    </div>
+  </div>
+
+  <!-- FILE TYPE TOGGLE -->
+  <div class="fg" style="margin-bottom:20px">
+    <label id="mainFileLbl">Book File <span class="req">*</span></label>
+    <div class="rc-group">
+      <div class="rc sel" data-v="file_link" onclick="selFileType(this,'main')">
+        <input type="radio" name="main_file_type" value="file_link" checked>
+        <span class="rc-lbl">🔗 Upload File Link (Google Drive, OneDrive, DropBox, Mega) — <em>Recommended</em></span>
+      </div>
+      <div class="rc" data-v="file_direct" onclick="selFileType(this,'main')">
+        <input type="radio" name="main_file_type" value="file_direct">
+        <span class="rc-lbl">⬆️ Upload Directly (Max 50MB — .pdf or .doc)</span>
+      </div>
+    </div>
+    <div id="mainLinkWrap" style="margin-top:12px">
+      <label for="mainFileLink">File Link <span class="req">*</span> <small>(Make sure "Anyone with the Link" can access the file)</small></label>
+      <input type="url" id="mainFileLink" placeholder="Paste your file link here…" style="margin-top:6px"/>
+      <p class="ferr" id="e_mainlink">Please provide a valid file link.</p>
+    </div>
+    <div id="mainDirectWrap" class="hidden" style="margin-top:12px">
+      <label>Upload File — Maximum 50 MB (Word or PDF) <span class="req">*</span></label>
+      <div class="dz" onclick="document.getElementById('mainFileIn').click()"
+        ondragover="doDrag(event,this)" ondrop="doDrop(event,'mainFileIn','mainFN')">
+        <div class="dz-icon">📄</div>
+        <div class="dz-txt">Drag &amp; drop or <strong>click to browse</strong></div>
+        <div class="dz-txt" style="font-size:12px;margin-top:4px">PDF or DOC — max 50MB</div>
+        <div class="fn" id="mainFN"></div>
+        <input type="file" id="mainFileIn" accept=".pdf,.doc,.docx" onchange="showFN(this,'mainFN')"/>
+      </div>
+      <p class="ferr" id="e_mainfile">Please upload your file.</p>
+    </div>
+  </div>
+
+  <!-- SELLING PREFERENCE (Book & Other Publishers only) -->
+  <div class="cond" id="sellPrefBlock">
+    <hr class="divider"/>
+    <div class="fg" style="margin-bottom:16px">
+      <label>Selling Preference — Hard Copy <span class="req">*</span></label>
+      <div class="radio-row">
+        <label class="ro"><input type="radio" name="selling_pref" value="interested" onchange="onSellPref()"> Interested</label>
+        <label class="ro"><input type="radio" name="selling_pref" value="not_interested" onchange="onSellPref()"> Not Interested</label>
+      </div>
+      <p class="ferr" id="e_sellpref">Please select your preference.</p>
+    </div>
+    <!-- Hard copy details (Interested only) -->
+    <div class="cond" id="hardCopyBlock">
+      <div class="fg" style="margin-bottom:16px">
+        <label>Hard Copy Shipping <span class="req">*</span></label>
+        <div class="radio-row">
+          <label class="ro"><input type="radio" name="hard_copy_shipping" value="ship_myself" onchange="onShipping()"> Ship Hard-copy myself to the customer</label>
+          <label class="ro"><input type="radio" name="hard_copy_shipping" value="require_wwp" onchange="onShipping()"> Require WWP to ship the Hard-copy to the customer</label>
+        </div>
+        <p class="ferr" id="e_shipping">Please select a shipping method.</p>
+      </div>
+      <!-- Address (require_wwp only) -->
+      <div class="cond" id="addrBlock">
+        <div class="addr-card">
+          <h4>Author's Address</h4>
+          <div class="fr">
+            <div class="fg">
+              <label for="addr1">Address Line 1 <span class="req">*</span></label>
+              <input type="text" id="addr1" placeholder="Address Line 1"/>
+              <p class="ferr" id="e_addr1">Address Line 1 is required.</p>
+            </div>
+            <div class="fg">
+              <label for="addr2">Address Line 2</label>
+              <input type="text" id="addr2" placeholder="Address Line 2"/>
+            </div>
+          </div>
+          <div class="fr">
+            <div class="fg">
+              <label for="addrCity">City <span class="req">*</span></label>
+              <input type="text" id="addrCity" placeholder="City"/>
+              <p class="ferr" id="e_city">City is required.</p>
+            </div>
+            <div class="fg">
+              <label for="addrState">State <span class="req">*</span></label>
+              <input type="text" id="addrState" placeholder="State"/>
+              <p class="ferr" id="e_state">State is required.</p>
+            </div>
+          </div>
+          <div class="fr">
+            <div class="fg">
+              <label for="addrZip">Zip Code <span class="req">*</span></label>
+              <input type="text" id="addrZip" placeholder="Zip"/>
+              <p class="ferr" id="e_zip">Zip code is required.</p>
+            </div>
+            <div class="fg">
+              <label for="addrCtry">Country <span class="req">*</span></label>
+              <select id="addrCtry">
+                <option value="">Select Country</option>
+                <option>Australia</option><option>Bangladesh</option><option>Brazil</option>
+                <option>Canada</option><option>China</option><option>Egypt</option>
+                <option>France</option><option>Germany</option><option>Ghana</option>
+                <option>India</option><option>Indonesia</option><option>Italy</option>
+                <option>Japan</option><option>Kenya</option><option>Malaysia</option>
+                <option>Mexico</option><option>Nigeria</option><option>Pakistan</option>
+                <option>Philippines</option><option>Poland</option><option>Russia</option>
+                <option>Saudi Arabia</option><option>Singapore</option><option>South Africa</option>
+                <option>South Korea</option><option>Spain</option><option>Sri Lanka</option>
+                <option>Turkey</option><option>United Arab Emirates</option>
+                <option>United Kingdom</option><option>United States</option><option>Vietnam</option>
+              </select>
+              <p class="ferr" id="e_actry">Country is required.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNDESIGNED BOOK INFO (shown when Undesigned Book selected) -->
+  <div class="cond" id="undesignedBlock">
+    <div class="info-card">
+      <h3>Undesigned Book Information</h3>
+      <p>Provide detailed specifications for your book, including the number of pages, images, and tables. This information helps us design and format your manuscript to create a polished and professional final product.</p>
+      <hr class="divider"/>
+      <div class="fr3">
+        <div class="fg">
+          <label for="numPages">Number of Pages <span class="req">*</span></label>
+          <input type="number" id="numPages" placeholder="Number of Pages" min="1"/>
+          <p class="ferr" id="e_pages">Number of pages is required.</p>
+        </div>
+        <div class="fg">
+          <label for="numImages">Number of Images <span class="req">*</span></label>
+          <input type="number" id="numImages" placeholder="Number of Images" min="0"/>
+          <p class="ferr" id="e_images">Number of images is required.</p>
+        </div>
+        <div class="fg">
+          <label for="numTables">Number of Tables <span class="req">*</span></label>
+          <input type="number" id="numTables" placeholder="Number of Tables" min="0"/>
+          <p class="ferr" id="e_tables">Number of tables is required.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="btn btn-out" onclick="goBack(3)">← Previous</button>
+    <button class="btn btn-pri" onclick="goNext(3)">Next →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- STEP 4 — Book Details / Dissertation Details          -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="sp" id="step4">
+  <h2 class="stitle" id="s4title">Book Details</h2>
+  <p class="ssub" id="s4sub">Provide comprehensive details about your book, including its description, cover design, suggested price, and other key attributes.</p>
+  <hr class="divider"/>
+
+  <!-- DETAILED DESCRIPTION (all types) -->
+  <div class="fr full">
+    <div class="fg">
+      <label>Detailed <span id="s4descLbl">Book</span> Description <span class="req">*</span> <small>(Recommended 400–500 words)</small></label>
+      <div class="rte">
+        <div class="rte-bar">
+          <button class="tb" onclick="rCmd('bold')"><b>B</b></button>
+          <button class="tb" onclick="rCmd('italic')"><i>I</i></button>
+          <button class="tb" onclick="rCmd('underline')"><u>U</u></button>
+          <button class="tb" onclick="rCmd('insertUnorderedList')">•≡</button>
+          <button class="tb" onclick="rCmd('insertOrderedList')">1≡</button>
+          <button class="tb" onclick="rCmd('justifyLeft')">⇤</button>
+          <button class="tb" onclick="rCmd('justifyCenter')">⇔</button>
+          <button class="tb" onclick="rCmd('justifyRight')">⇥</button>
+        </div>
+        <div class="rte-body" id="detDesc" contenteditable="true"
+          data-ph="Detailed description…" oninput="updWC('detDesc','wc1')"></div>
+      </div>
+      <div class="wc" id="wc1">0 words</div>
+      <p class="ferr" id="e_detdesc">Detailed description is required.</p>
+    </div>
+  </div>
+
+  <div class="fr full" style="margin-top:16px">
+    <div class="fg">
+      <label for="excerpt"><span id="s4excerptLbl">Book</span> Excerpt — Short Description <span class="req">*</span> <small>(Recommended 75–100 words)</small></label>
+      <textarea id="excerpt" placeholder="Short description…" oninput="updWC('excerpt','wc2')"></textarea>
+      <div class="wc" id="wc2">0 words</div>
+      <p class="ferr" id="e_excerpt">Excerpt is required.</p>
+    </div>
+  </div>
+
+  <!-- BOOK PUBLISHING & OTHER PUBLISHERS SPECIFIC FIELDS -->
+  <div class="cond" id="bookDetailsExtra">
+    <div class="fr3" style="margin-top:16px">
+      <div class="fg">
+        <label for="totalPages">Total Page Count <span class="req">*</span></label>
+        <input type="number" id="totalPages" placeholder="Total Page Count" min="1"/>
+        <p class="ferr" id="e_tpages">Total page count is required.</p>
+      </div>
+      <div class="fg">
+        <label for="bookLang">Book Language <span class="req">*</span></label>
+        <input type="text" id="bookLang" placeholder="Language"/>
+        <p class="ferr" id="e_lang">Book language is required.</p>
+      </div>
+      <div class="fg">
+        <label for="bookGenre">Proposed Category / Genre <span class="req">*</span></label>
+        <select id="bookGenre">
+          <option value="">Category / Genre</option>
+          <option>Fiction</option><option>Non-Fiction</option><option>Biography</option>
+          <option>Self-Help</option><option>Business</option><option>Science</option>
+          <option>History</option><option>Philosophy</option><option>Religion / Spirituality</option>
+          <option>Children's</option><option>Young Adult</option><option>Mystery / Thriller</option>
+          <option>Romance</option><option>Science Fiction</option><option>Fantasy</option>
+          <option>Horror</option><option>Poetry</option><option>Drama / Play</option>
+          <option>Academic / Educational</option><option>Health / Wellness</option>
+          <option>Travel</option><option>Cooking / Food</option><option>Art / Design</option>
+          <option>Technology</option><option>Law</option><option>Other</option>
+        </select>
+        <p class="ferr" id="e_genre">Category / Genre is required.</p>
+      </div>
+    </div>
+
+    <div class="fr" style="margin-top:4px">
+      <div class="fg">
+        <label>Book Front Cover <span class="req">*</span></label>
+        <div class="radio-row">
+          <label class="ro"><input type="radio" name="front_cover" value="present" onchange="updPayment()"> Present</label>
+          <label class="ro"><input type="radio" name="front_cover" value="not_present" onchange="updPayment()"> Not Present</label>
+        </div>
+        <p class="ferr" id="e_fcover">Please select front cover status.</p>
+      </div>
+      <div class="fg">
+        <label>Book Back Cover <span class="req">*</span></label>
+        <div class="radio-row">
+          <label class="ro"><input type="radio" name="back_cover" value="present" onchange="updPayment()"> Present</label>
+          <label class="ro"><input type="radio" name="back_cover" value="not_present" onchange="updPayment()"> Not Present</label>
+        </div>
+        <p class="ferr" id="e_bcover">Please select back cover status.</p>
+      </div>
+    </div>
+
+    <div class="fr" style="margin-top:4px">
+      <div class="fg">
+        <label for="frontCoverTxt">Front Cover Text</label>
+        <textarea id="frontCoverTxt" placeholder="Front cover text…" style="min-height:100px"></textarea>
+      </div>
+      <div class="fg">
+        <label for="backCoverTxt">Back Cover Text</label>
+        <textarea id="backCoverTxt" placeholder="Back cover text…" style="min-height:100px"></textarea>
+      </div>
+    </div>
+
+    <div class="fr" style="margin-top:4px">
+      <div class="fg">
+        <label>Front Cover Upload (Featured) <span class="req">*</span></label>
+        <div class="file-btn-wrap">
+          <button type="button" class="file-btn" onclick="document.getElementById('frontCoverFile').click()">Choose File</button>
+          <span class="file-btn-label fn" id="frontCoverFN">No file chosen</span>
+          <input type="file" id="frontCoverFile" accept="image/*,.pdf" onchange="showFN(this,'frontCoverFN')" style="display:none"/>
+        </div>
+        <p class="ferr" id="e_fcover_file">Front cover file is required.</p>
+      </div>
+      <div class="fg">
+        <label>Back Cover Upload <span class="req">*</span></label>
+        <div class="file-btn-wrap">
+          <button type="button" class="file-btn" onclick="document.getElementById('backCoverFile').click()">Choose File</button>
+          <span class="file-btn-label fn" id="backCoverFN">No file chosen</span>
+          <input type="file" id="backCoverFile" accept="image/*,.pdf" onchange="showFN(this,'backCoverFN')" style="display:none"/>
+        </div>
+        <p class="ferr" id="e_bcover_file">Back cover file is required.</p>
+      </div>
+    </div>
+
+    <div class="fr" style="margin-top:4px">
+      <div class="fg">
+        <label for="suggestedPrice">Suggested Book Price (in USD - $) <span class="req">*</span></label>
+        <input type="number" id="suggestedPrice" placeholder="Book Price" min="0" step="0.01"/>
+        <p class="ferr" id="e_price">Suggested price is required.</p>
+      </div>
+      <div class="fg">
+        <label>Book Cover Type <span class="req">*</span></label>
+        <div class="radio-row">
+          <label class="ro"><input type="radio" name="cover_type" value="hardcover"> Hardcover</label>
+          <label class="ro"><input type="radio" name="cover_type" value="softcover"> Softcover</label>
+        </div>
+        <p class="ferr" id="e_covertype">Please select cover type.</p>
+      </div>
+    </div>
+
+    <div class="fr" style="margin-top:4px">
+      <div class="fg">
+        <label for="colorTheme">Book Color Theme (Optional)</label>
+        <input type="color" id="colorTheme" value="#1A1A2E"/>
+      </div>
+      <div class="fg">
+        <label for="bookDim">Proposed Book Dimension <span class="req">*</span></label>
+        <select id="bookDim">
+          <option value="">Select Dimension</option>
+          <option>5" × 8" (Digest)</option>
+          <option>5.5" × 8.5" (Trade)</option>
+          <option>6" × 9" (Standard Trade)</option>
+          <option>7" × 10" (Textbook)</option>
+          <option>8" × 10" (Workbook)</option>
+          <option>8.5" × 11" (Letter)</option>
+          <option>4" × 6" (Pocket)</option>
+          <option>Custom</option>
+        </select>
+        <p class="ferr" id="e_dim">Book dimension is required.</p>
+      </div>
+    </div>
+  </div><!-- /bookDetailsExtra -->
+
+  <!-- DISSERTATION ONLY: extra fields -->
+  <div class="cond" id="disstDetailsExtra">
+    <div class="fr full" style="margin-top:16px">
+      <div class="fg">
+        <label for="disstTags">Dissertation Tags</label>
+        <input type="text" id="disstTags" placeholder="Type tags separated by commas…"/>
+      </div>
+    </div>
+    <div class="fr" style="margin-top:4px">
+      <div class="fg">
+        <label for="guideName">Guide Name</label>
+        <input type="text" id="guideName" placeholder="Dissertation Guide"/>
+      </div>
+      <div class="fg">
+        <label for="uniName">University / College Name</label>
+        <input type="text" id="uniName" placeholder="University / College Name"/>
+      </div>
+    </div>
+
+    <!-- DISSERTATION FILE -->
+    <hr class="divider"/>
+    <div class="instr">
+      <h3>Dissertation File Upload Instructions</h3>
+      <p>You have two options to submit your Dissertation file:</p>
+      <h4>1. Upload File Link <em>(Recommended)</em></h4>
+      <ul>
+        <li>Use <strong>Google Drive, OneDrive, Dropbox, or Mega</strong>.</li>
+        <li>Ensure the link is <strong>publicly accessible</strong> or shared with appropriate permissions.</li>
+        <li>Copy and paste the <strong>direct link</strong> in the provided field.</li>
+      </ul>
+      <h4>2. Upload Dissertation Directly</h4>
+      <ul>
+        <li>Only <strong>.pdf</strong> or <strong>.doc</strong> files accepted.</li>
+        <li><strong>Maximum File Size: 50MB</strong>.</li>
+      </ul>
+    </div>
+    <div class="fg" style="margin-bottom:20px">
+      <label>Dissertation File <span class="req">*</span></label>
+      <div class="rc-group">
+        <div class="rc sel" data-v="disst_link" onclick="selFileType(this,'disst')">
+          <input type="radio" name="disst_file_type" value="disst_link" checked>
+          <span class="rc-lbl">🔗 Upload File Link — <em>Recommended</em></span>
+        </div>
+        <div class="rc" data-v="disst_direct" onclick="selFileType(this,'disst')">
+          <input type="radio" name="disst_file_type" value="disst_direct">
+          <span class="rc-lbl">⬆️ Upload Directly (Max 50MB)</span>
+        </div>
+      </div>
+      <div id="disstLinkWrap" style="margin-top:12px">
+        <label for="disstFileLink">Dissertation File Link <span class="req">*</span></label>
+        <input type="url" id="disstFileLink" placeholder="Paste file link here…" style="margin-top:6px"/>
+        <p class="ferr" id="e_dlink">Please provide a valid file link.</p>
+      </div>
+      <div id="disstDirectWrap" class="hidden" style="margin-top:12px">
+        <label>Upload Dissertation — Max 50 MB <span class="req">*</span></label>
+        <div class="dz" onclick="document.getElementById('disstFileIn').click()"
+          ondragover="doDrag(event,this)" ondrop="doDrop(event,'disstFileIn','disstFN')">
+          <div class="dz-icon">📝</div>
+          <div class="dz-txt">Drag &amp; drop or <strong>click to browse</strong></div>
+          <div class="fn" id="disstFN"></div>
+          <input type="file" id="disstFileIn" accept=".pdf,.doc,.docx" onchange="showFN(this,'disstFN')"/>
+        </div>
+        <p class="ferr" id="e_dfile">Please upload your dissertation file.</p>
+      </div>
+    </div>
+  </div><!-- /disstDetailsExtra -->
+
+  <div class="nav">
+    <button class="btn btn-out" onclick="goBack(4)">← Previous</button>
+    <button class="btn btn-pri" onclick="goNext(4)">Next →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- STEP 5 — Payment Summary                              -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="sp" id="step5">
+  <h2 class="stitle">Payment Summary</h2>
+  <p class="ssub">Review the summary of all applicable charges for your selected publishing services.</p>
+  <hr class="divider"/>
+
+  <!-- BOOK/OTHER PUBLISHERS: Designing Cost + ISBN -->
+  <div class="cond" id="bookPayExtra">
+    <div class="fr full" style="margin-bottom:16px">
+      <div class="fg">
+        <label for="designCost">Designing Cost of Book (in USD $)</label>
+        <input type="number" id="designCost" placeholder="0.00" min="0" step="0.01" oninput="updPayment()" style="background:#f8f8f8"/>
+      </div>
+    </div>
+
+    <div class="fg" style="margin-bottom:20px">
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:12px">
+        <label style="flex:none">ISBN for the Book <span class="req">*</span></label>
+        <span class="isbn-msg" id="isbnMsg" style="display:none">ISBN Charges: $100.00</span>
+      </div>
+      <div class="radio-row" style="margin-top:8px">
+        <label class="ro"><input type="radio" name="isbn_opt" value="present" onchange="onISBN()"> Present</label>
+        <label class="ro"><input type="radio" name="isbn_opt" value="buy_wwp" onchange="onISBN()"> Buy through WWP</label>
+      </div>
+      <p class="ferr" id="e_isbn">Please select ISBN option.</p>
+    </div>
+  </div>
+
+  <!-- PAYMENT LABEL -->
+  <p id="payLbl" style="font-size:14px;color:var(--gray);margin-bottom:4px;font-weight:500"></p>
+
+  <!-- PAYMENT TABLE -->
+  <table class="pay-tbl" id="payTable">
+    <thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Line Total</th></tr></thead>
+    <tbody id="payBody"></tbody>
+  </table>
+
+  <div class="alert al-ok" id="submitMsg"></div>
+  <div class="alert al-er" id="submitErr"></div>
+
+  <button class="btn btn-pay" id="payBtn" onclick="submitForm()">💳 Pay &amp; Submit</button>
+
+  <div class="nav" style="margin-top:20px">
+    <button class="btn btn-out" onclick="goBack(5)">← Previous</button>
+    <div></div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="sp" id="stepSuccess">
+  <div class="suc">
+    <div class="suc-icon">🎉</div>
+    <h2>Submission Received!</h2>
+    <p>Thank you for submitting your work to World Window Publishing. Our team will review your submission and get in touch with you shortly. Please check your email for a confirmation.</p>
+  </div>
+</div>
+
+</div><!-- /fc -->
+
+<!-- ═══ YOUR FOOTER GOES HERE ═══ -->
+
+<script>
+// ── CONFIG ─────────────────────────────────────────────────────
+const PUB_CHARGES = { book_publishing: 200, student_dissertations: 20, other_publishers: 200 };
+const PUB_LABELS  = { book_publishing: 'Book Publishing', student_dissertations: 'Student Dissertation', other_publishers: 'Other Publishers' };
+const ISBN_COST   = 100;
+const STEP_NAMES  = ['Publishing Type','Author Detail','Book / File Upload','Book / Dissertation Details','Payment Summary'];
+
+// ── HELPERS ─────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+function getPT()  { return document.querySelector('input[name="publishing_type"]:checked')?.value || 'book_publishing'; }
+function showEl(id,v){ const e=$(id); if(e){ e.classList.toggle('hidden',!v); } }
+function showC(id,v) { const e=$(id); if(e){ e.classList.toggle('show',v); } }
+function showE(id,v) { const e=$(id); if(e){ e.classList.toggle('show',v); } }
+function markE(id,v) { const e=$(id); if(e){ e.classList.toggle('err',v); } }
+function gv(id)      { const e=$(id); return e ? e.value.trim() : ''; }
+
+// ── PROGRESS ────────────────────────────────────────────────────
+function updProg(step) {
+  $('pbIn').style.width = Math.round(step/5*100)+'%';
+  $('sNum').textContent = step;
+  $('sName').textContent = STEP_NAMES[step-1]||'';
+  for(let i=1;i<=5;i++) $('d'+i).className='dot'+(i<step?' done':i===step?' active':'');
+}
+
+// ── SHOW STEP ────────────────────────────────────────────────────
+function showStep(n) {
+  document.querySelectorAll('.sp').forEach(p=>p.classList.remove('active'));
+  const el = $('step'+n); if(el) el.classList.add('active');
+  updProg(n); window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── NAVIGATE ────────────────────────────────────────────────────
+function goNext(from) {
+  if(!validate(from)) return;
+  const type = getPT();
+  updPayment();
+  if(from===3 && type==='student_dissertations') { showStep(4); }
+  else if(from===3 && type!=='student_dissertations') { showStep(4); } // Book Details always step 4
+  else { showStep(from+1); }
+}
+function goBack(from) { showStep(from-1); }
+
+// ── PUBLISHING TYPE ──────────────────────────────────────────────
+function selPub(card) {
+  document.querySelectorAll('#ptCards .rc').forEach(c=>c.classList.remove('sel'));
+  card.classList.add('sel'); card.querySelector('input').checked=true;
+  applyTypeUI(); updPayment();
+}
+
+function applyTypeUI() {
+  const t = getPT();
+  const isDiss  = t==='student_dissertations';
+  const isOther = t==='other_publishers';
+  const isBook  = t==='book_publishing';
+
+  // Step 2
+  showC('pubFields', isOther);
+
+  // Step 3
+  showEl('bookInfoBlock', !isDiss);
+  showEl('disstInfoBlock', isDiss);
+  showC('sellPrefBlock', !isDiss);
+
+  const lbl = $('uploadTitle'); if(lbl) lbl.textContent = isDiss ? 'Dissertation File Upload Instructions' : 'Book File Upload Instructions';
+  const fl  = $('mainFileLbl'); if(fl)  fl.innerHTML = (isDiss?'Dissertation File':'Book File')+' <span class="req">*</span>';
+
+  // Step 4
+  const t4 = $('s4title'), s4 = $('s4sub'), dl = $('s4descLbl'), el = $('s4excerptLbl');
+  if(isDiss) {
+    if(t4) t4.textContent='Dissertation Details';
+    if(s4) s4.textContent='Include additional information about your dissertation.';
+    if(dl) dl.textContent='Dissertation'; if(el) el.textContent='Dissertation';
+  } else {
+    if(t4) t4.textContent='Book Details';
+    if(s4) s4.textContent='Provide comprehensive details about your book, including description, cover design, suggested price, and other key attributes.';
+    if(dl) dl.textContent='Book'; if(el) el.textContent='Book';
+  }
+  showC('bookDetailsExtra', !isDiss);
+  showC('disstDetailsExtra', isDiss);
+
+  // Step 5
+  showC('bookPayExtra', !isDiss);
+}
+
+// ── DESIGN STATUS ────────────────────────────────────────────────
+function onDesignStatus() {
+  const v = document.querySelector('input[name="book_design_status"]:checked')?.value;
+  showC('undesignedBlock', v==='undesigned');
+}
+
+// ── FILE TYPE TOGGLE ─────────────────────────────────────────────
+function selFileType(card, grp) {
+  const name = card.querySelector('input').name;
+  document.querySelectorAll(`[name="${name}"]`).forEach(r=>r.closest('.rc')?.classList.remove('sel'));
+  card.classList.add('sel'); card.querySelector('input').checked=true;
+  const isLink = card.dataset.v.endsWith('link');
+  if(grp==='main') {
+    showEl('mainLinkWrap', isLink);
+    $('mainDirectWrap').classList.toggle('hidden', isLink);
+  } else {
+    showEl('disstLinkWrap', isLink);
+    $('disstDirectWrap').classList.toggle('hidden', isLink);
+  }
+}
+
+// ── SELLING PREF ─────────────────────────────────────────────────
+function onSellPref() {
+  const v = document.querySelector('input[name="selling_pref"]:checked')?.value;
+  showC('hardCopyBlock', v==='interested');
+  if(v!=='interested') showC('addrBlock', false);
+}
+function onShipping() {
+  const v = document.querySelector('input[name="hard_copy_shipping"]:checked')?.value;
+  showC('addrBlock', v==='require_wwp');
+}
+
+// ── ISBN ─────────────────────────────────────────────────────────
+function onISBN() {
+  const v = document.querySelector('input[name="isbn_opt"]:checked')?.value;
+  const msg = $('isbnMsg');
+  if(msg) { msg.style.display = v==='buy_wwp' ? 'inline' : 'none'; }
+  updPayment();
+}
+
+// ── DRAG & DROP ──────────────────────────────────────────────────
+function doDrag(e,zone){e.preventDefault();zone.classList.add('over')}
+function doDrop(e,inId,fnId){
+  e.preventDefault();e.currentTarget.classList.remove('over');
+  const f=e.dataTransfer.files;
+  if(f.length){$(inId).files=f;$(fnId).textContent='✅ '+f[0].name}
+}
+function showFN(inp,fnId){ if(inp.files.length)$(fnId).textContent='✅ '+inp.files[0].name }
+
+// ── RICH TEXT ────────────────────────────────────────────────────
+function rCmd(cmd){document.execCommand(cmd,false,null)}
+function updWC(elId,wcId){
+  const el=$(elId); const txt=(el.innerText||el.value||'').trim();
+  const c=txt?txt.split(/\s+/).filter(Boolean).length:0;
+  $(wcId).textContent=c+' word'+(c!==1?'s':'');
+}
+
+// ── PAYMENT ──────────────────────────────────────────────────────
+function updPayment() {
+  const type  = getPT();
+  const isDiss = type==='student_dissertations';
+  const pub   = PUB_CHARGES[type]||200;
+  const label = PUB_LABELS[type]||'Publishing';
+  const dc    = isDiss ? 0 : (parseFloat(gv('designCost'))||0);
+  const isbn  = (!isDiss && document.querySelector('input[name="isbn_opt"]:checked')?.value==='buy_wwp') ? ISBN_COST : 0;
+  const total = pub + dc + isbn;
+
+  // Header label
+  $('payLbl').innerHTML = `Book Publishing Charge: <strong>$${pub.toFixed(2)}</strong>`;
+
+  // Build table rows
+  const rows = [];
+  if(!isDiss && dc>0) rows.push([`Designing Cost of Book (in USD $)`, dc]);
+  rows.push([`Publishing Charge — ${label} (in USD $)`, pub]);
+  if(isbn>0) rows.push([`ISBN Charges (in USD $)`, isbn]);
+
+  let html = rows.map(([item,price])=>
+    `<tr><td>${item}</td><td>$${price.toFixed(2)}</td><td>1</td><td>$${price.toFixed(2)}</td></tr>`
+  ).join('');
+  html += `<tr class="trow"><td colspan="3" style="text-align:right;padding-right:12px">Total</td><td><strong>$${total.toFixed(2)}</strong></td></tr>`;
+  $('payBody').innerHTML = html;
+}
+
+// ── VALIDATION ───────────────────────────────────────────────────
+function validate(step) {
+  let ok=true; const type=getPT(); const isDiss=type==='student_dissertations';
+
+  if(step===1) {
+    const t = $('agreeTerms').checked; showE('e_terms',!t); if(!t) ok=false;
+  }
+
+  if(step===2) {
+    const n=gv('aName'), e=gv('aEmail'), b=gv('aBio'), c=$('aCountry').value, p=gv('aPhone');
+    const ve=/\S+@\S+\.\S+/.test(e);
+    showE('e_name',!n);  markE('aName',!n);
+    showE('e_email',!ve); markE('aEmail',!ve);
+    showE('e_bio',!b);   markE('aBio',!b);
+    showE('e_country',!c); markE('aCountry',!c);
+    showE('e_phone',!p); markE('aPhone',!p);
+    if(!n||!ve||!b||!c||!p) ok=false;
+    if(type==='other_publishers'){ const pn=gv('pubName'); showE('e_pubname',!pn); markE('pubName',!pn); if(!pn) ok=false; }
+  }
+
+  if(step===3) {
+    if(!isDiss){ const bt=gv('bookTitle'); showE('e_btitle',!bt); markE('bookTitle',!bt); if(!bt) ok=false; }
+    if(isDiss){
+      const dt=gv('dTitle'),ds=gv('dSpec');
+      showE('e_dtitle',!dt); markE('dTitle',!dt);
+      showE('e_dspec',!ds);  markE('dSpec',!ds);
+      if(!dt||!ds) ok=false;
+    }
+    const mft = document.querySelector('input[name="main_file_type"]:checked')?.value;
+    if(mft==='file_link'){ const l=gv('mainFileLink'); showE('e_mainlink',!l); markE('mainFileLink',!l); if(!l) ok=false; }
+    else{ const f=$('mainFileIn').files[0]; showE('e_mainfile',!f); if(!f) ok=false; }
+
+    if(!isDiss){
+      const sp=document.querySelector('input[name="selling_pref"]:checked')?.value;
+      showE('e_sellpref',!sp); if(!sp) ok=false;
+      if(sp==='interested'){
+        const sm=document.querySelector('input[name="hard_copy_shipping"]:checked')?.value;
+        showE('e_shipping',!sm); if(!sm) ok=false;
+        if(sm==='require_wwp'){
+          const a1=gv('addr1'),ac=gv('addrCity'),ast=gv('addrState'),az=gv('addrZip'),aco=$('addrCtry').value;
+          showE('e_addr1',!a1); markE('addr1',!a1);
+          showE('e_city',!ac); markE('addrCity',!ac);
+          showE('e_state',!ast); markE('addrState',!ast);
+          showE('e_zip',!az); markE('addrZip',!az);
+          showE('e_actry',!aco); markE('addrCtry',!aco);
+          if(!a1||!ac||!ast||!az||!aco) ok=false;
+        }
+      }
+      const ds2=document.querySelector('input[name="book_design_status"]:checked')?.value;
+      if(ds2==='undesigned'){
+        const pg=gv('numPages'),im=gv('numImages'),tb=gv('numTables');
+        showE('e_pages',!pg); markE('numPages',!pg);
+        showE('e_images',im===''); markE('numImages',im==='');
+        showE('e_tables',tb===''); markE('numTables',tb==='');
+        if(!pg||im===''||tb==='') ok=false;
+      }
+    }
+  }
+
+  if(step===4) {
+    const dd=$('detDesc').innerText.trim(), ex=gv('excerpt');
+    showE('e_detdesc',!dd); showE('e_excerpt',!ex);
+    if(!dd||!ex) ok=false;
+
+    if(!isDiss){
+      const tp=gv('totalPages'),bl=gv('bookLang'),bg=$('bookGenre').value;
+      const fc=document.querySelector('input[name="front_cover"]:checked')?.value;
+      const bc=document.querySelector('input[name="back_cover"]:checked')?.value;
+      const ct=document.querySelector('input[name="cover_type"]:checked')?.value;
+      const bd=$('bookDim').value, sp=gv('suggestedPrice');
+      showE('e_tpages',!tp); markE('totalPages',!tp);
+      showE('e_lang',!bl);   markE('bookLang',!bl);
+      showE('e_genre',!bg);  markE('bookGenre',!bg);
+      showE('e_fcover',!fc); showE('e_bcover',!bc);
+      showE('e_covertype',!ct); showE('e_dim',!bd); markE('bookDim',!bd);
+      showE('e_price',!sp);  markE('suggestedPrice',!sp);
+      const fcf=$('frontCoverFile').files[0], bcf=$('backCoverFile').files[0];
+      showE('e_fcover_file',!fcf); showE('e_bcover_file',!bcf);
+      if(!tp||!bl||!bg||!fc||!bc||!ct||!bd||!sp||!fcf||!bcf) ok=false;
+    }
+
+    if(isDiss){
+      const dft=document.querySelector('input[name="disst_file_type"]:checked')?.value;
+      if(dft==='disst_link'){ const dl=gv('disstFileLink'); showE('e_dlink',!dl); markE('disstFileLink',!dl); if(!dl) ok=false; }
+      else{ const df=$('disstFileIn').files[0]; showE('e_dfile',!df); if(!df) ok=false; }
+    }
+  }
+
+  if(step===5 && !isDiss){
+    const ib=document.querySelector('input[name="isbn_opt"]:checked')?.value;
+    showE('e_isbn',!ib); if(!ib) ok=false;
+  }
+
+  return ok;
+}
+
+// ── SUBMIT ───────────────────────────────────────────────────────
+async function submitForm() {
+  const btn=$('payBtn'); btn.disabled=true; btn.textContent='⏳ Processing…';
+  $('submitMsg').style.display='none'; $('submitErr').style.display='none';
+
+  const type=getPT(), isDiss=type==='student_dissertations';
+  const fd=new FormData();
+  fd.append('publishing_type',type);
+  fd.append('author_name',gv('aName'));
+  fd.append('author_email',gv('aEmail'));
+  fd.append('author_bio',gv('aBio'));
+  fd.append('author_country',$('aCountry').value);
+  fd.append('author_phone',$('phCode').value+gv('aPhone'));
+  fd.append('publisher_name',gv('pubName'));
+  fd.append('publisher_website',gv('pubWeb'));
+  fd.append('book_title',gv('bookTitle'));
+  fd.append('book_design_status',document.querySelector('input[name="book_design_status"]:checked')?.value||'');
+  fd.append('disst_title',gv('dTitle'));
+  fd.append('disst_spec',gv('dSpec'));
+  const mft=document.querySelector('input[name="main_file_type"]:checked')?.value||'';
+  fd.append('main_file_type',mft);
+  fd.append('main_file_link',gv('mainFileLink'));
+  const mf=$('mainFileIn').files[0]; if(mf) fd.append('main_file',mf);
+  fd.append('selling_pref',document.querySelector('input[name="selling_pref"]:checked')?.value||'');
+  fd.append('shipping_method',document.querySelector('input[name="hard_copy_shipping"]:checked')?.value||'');
+  fd.append('addr_line1',gv('addr1')); fd.append('addr_line2',gv('addr2'));
+  fd.append('addr_city',gv('addrCity')); fd.append('addr_state',gv('addrState'));
+  fd.append('addr_zip',gv('addrZip')); fd.append('addr_country',$('addrCtry').value);
+  fd.append('num_pages',gv('numPages')); fd.append('num_images',gv('numImages')); fd.append('num_tables',gv('numTables'));
+  fd.append('detailed_desc',$('detDesc').innerHTML.trim());
+  fd.append('excerpt',gv('excerpt'));
+  fd.append('total_pages',gv('totalPages'));
+  fd.append('book_language',gv('bookLang'));
+  fd.append('book_genre',$('bookGenre').value);
+  fd.append('front_cover',document.querySelector('input[name="front_cover"]:checked')?.value||'');
+  fd.append('back_cover',document.querySelector('input[name="back_cover"]:checked')?.value||'');
+  fd.append('front_cover_text',gv('frontCoverTxt'));
+  fd.append('back_cover_text',gv('backCoverTxt'));
+  const fcf=$('frontCoverFile').files[0]; if(fcf) fd.append('front_cover_file',fcf);
+  const bcf=$('backCoverFile').files[0]; if(bcf) fd.append('back_cover_file',bcf);
+  fd.append('suggested_price',gv('suggestedPrice'));
+  fd.append('cover_type',document.querySelector('input[name="cover_type"]:checked')?.value||'');
+  fd.append('color_theme',$('colorTheme').value);
+  fd.append('book_dimension',$('bookDim').value);
+  fd.append('disst_tags',gv('disstTags'));
+  fd.append('guide_name',gv('guideName'));
+  fd.append('university_name',gv('uniName'));
+  const dft=document.querySelector('input[name="disst_file_type"]:checked')?.value||'';
+  fd.append('disst_file_type',dft); fd.append('disst_file_link',gv('disstFileLink'));
+  const dff=$('disstFileIn').files[0]; if(dff) fd.append('disst_file',dff);
+  fd.append('design_cost',gv('designCost'));
+  fd.append('isbn_option',document.querySelector('input[name="isbn_opt"]:checked')?.value||'');
+
+  // Compute total
+  const pub=PUB_CHARGES[type]||200;
+  const dc=isDiss?0:(parseFloat(gv('designCost'))||0);
+  const isbn=(!isDiss&&document.querySelector('input[name="isbn_opt"]:checked')?.value==='buy_wwp')?ISBN_COST:0;
+  fd.append('payment_amount',(pub+dc+isbn).toFixed(2));
+
+  try {
+    const res=await fetch('submit.php',{method:'POST',body:fd});
+    const json=await res.json();
+    if(json.success){
+      document.querySelectorAll('.sp').forEach(p=>p.classList.remove('active'));
+      $('stepSuccess').classList.add('active');
+      $('pbIn').style.width='100%';
+      window.scrollTo({top:0,behavior:'smooth'});
+    } else {
+      const er=$('submitErr'); er.textContent=json.message||'Submission failed.'; er.style.display='block';
+      btn.disabled=false; btn.textContent='💳 Pay & Submit';
+    }
+  } catch(e) {
+    const er=$('submitErr'); er.textContent='Network error. Please try again.'; er.style.display='block';
+    btn.disabled=false; btn.textContent='💳 Pay & Submit';
+  }
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  applyTypeUI();
+  onDesignStatus(); // default undesigned shown
+  updPayment();
+  showC('undesignedBlock', true); // book publishing default = undesigned
+});
+</script>
+</body>
+</html>
