@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100" dir="ltr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Seller | Login</title>
+
+    <!-- Shared styles + bootstrap from project -->
+    <link href="../lgcss/style.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+
+    <style>
+      /* Login page theme (matches screenshot) */
+      .auth-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2.5rem 0;
+        background: #09111a;
+        background: radial-gradient(circle at top, rgba(15, 23, 33, 0.95), rgba(8, 12, 16, 0.92));
+      }
+
+      .auth-card {
+        max-width: 520px;
+        width: 100%;
+        background: rgba(4, 10, 19, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 2.6rem 2.4rem;
+      }
+
+      .auth-card h1,
+      .auth-card h2 {
+        color: rgba(240, 211, 148, 0.96);
+      }
+
+      .auth-card h2 {
+        margin-top: 0;
+        margin-bottom: 1.6rem;
+        font-size: 2.2rem;
+        letter-spacing: 0.02em;
+      }
+
+      .auth-card label {
+        font-weight: 600;
+        color: rgba(240, 211, 148, 0.9);
+      }
+
+      .auth-card input {
+        width: 100%;
+        padding: 0.9rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.94);
+      }
+
+      .auth-card input::placeholder {
+        color: rgba(255, 255, 255, 0.55);
+      }
+
+      .auth-card input:focus {
+        border-color: rgba(134, 74, 209, 0.8);
+        box-shadow: 0 0 0 4px rgba(134, 74, 209, 0.2);
+        outline: none;
+      }
+
+      .auth-card .form-group {
+        margin-bottom: 1.2rem;
+      }
+
+      .auth-card .remember-row {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        margin-bottom: 1.4rem;
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 0.92rem;
+      }
+
+      .auth-card .remember-row input {
+        width: auto;
+        margin: 0;
+      }
+
+      #lgbtn {
+        width: 100%;
+        padding: 0.95rem;
+        font-size: 1.05rem;
+        border-radius: 12px;
+        border: none;
+        background: linear-gradient(135deg, #864ad1, #ffb800);
+        color: #111;
+        font-weight: 600;
+        box-shadow: 0 12px 25px rgba(134, 74, 209, 0.22);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      #lgbtn:hover:enabled {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 28px rgba(134, 74, 209, 0.3);
+      }
+
+      .auth-links {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.92rem;
+        margin-top: 1.1rem;
+      }
+
+      .auth-links a {
+        color: rgba(255, 210, 150, 0.95);
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .auth-links a:hover {
+        text-decoration: underline;
+      }
+
+      .auth-footer {
+        margin-top: 1.8rem;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 0.92rem;
+      }
+
+      .auth-footer a {
+        color: rgba(255, 210, 150, 0.95);
+      }
+
+      @media (max-width: 480px) {
+        .auth-card {
+          padding: 2rem 1.6rem;
+        }
+        .auth-card h2 {
+          font-size: 1.9rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="vh-100">
+    <main class="auth-page">
+      <div class="auth-card">
+        <div class="text-center mb-4">
+          <img
+            style="height: 5rem"
+            src="../../assets/images/logo.png"
+            alt="Logo"
+          />
+        </div>
+        <h2 class="text-center">Login 5</h2>
+        <div class="form-group">
+          <label for="username">eMail</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="hello@example.com"
+            id="username"
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            placeholder="Password"
+            id="password"
+          />
+        </div>
+        <div class="remember-row">
+          <input type="checkbox" id="remember" />
+          <label for="remember">Remember me</label>
+        </div>
+        <button id="lgbtn" type="button" onclick="login()">
+          Login
+        </button>
+        <div class="auth-links">
+          <a href="index.html">Register</a>
+          <a href="foget_password/">Forgot?</a>
+        </div>
+        <div class="auth-footer">
+          Don’t have an account? <a href="index.html">Create one</a>
+        </div>
+      </div>
+    </main>
+
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../assets/js/sweetalert.js"></script>
+    <script src="../assets/js/script.js"></script>
+  </body>
+</html>
